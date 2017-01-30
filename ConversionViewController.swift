@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConversionViewController: UIViewController{
+class ConversionViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet var celsiusLabel: UILabel!
     var fahrenheitValue: Measurement<UnitTemperature>? {
         didSet {
