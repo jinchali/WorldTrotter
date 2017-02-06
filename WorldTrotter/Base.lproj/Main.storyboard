@@ -98,14 +98,10 @@
         <!--Map-->
         <scene sceneID="QVR-kO-USL">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fGv-RQ-0KE" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="rl4-SQ-1cE" customClass="MapViewController" customModule="WorldTrotter" customModuleProvider="target" sceneMemberID="viewController">
-                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="t1O-Ek-93p">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    </mapView>
                     <tabBarItem key="tabBarItem" title="Map" image="MapIcon" id="rK3-kt-D1s"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fGv-RQ-0KE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2204" y="24.7376311844078"/>
         </scene>
