@@ -70,8 +70,10 @@ class ConversionViewController: UIViewController, UITextFieldDelegate{
         let replacementTextHasDecimalSeperator = string.range(of: ".")
         
         let letters = NSCharacterSet.letters
+        let specialChars = NSMutableCharacterSet()
+        specialChars.addCharacters(in: "!@#$%^&*(/><';:])[-}=\\{_.|,?~`\"+")
 
-        if(string.rangeOfCharacter(from: letters) != nil)
+        if(string.rangeOfCharacter(from: letters) != nil || string.rangeOfCharacter(from: specialChars as CharacterSet) != nil)
         {
             return false
         } else
