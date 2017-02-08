@@ -54,6 +54,25 @@ class ConversionViewController: UIViewController, UITextFieldDelegate{
         updateCelsiusLabel()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //var today = Date()
+        let hour = Calendar.current.component(.hour, from: Date())
+        
+        //print(today)
+        print(hour)
+        
+        if(hour >= 18 || hour <= 6)
+        {
+            self.view.backgroundColor = UIColor.black
+        } else
+        {
+            self.view.backgroundColor = UIColor.white
+        }
+        
+    }
+    
     let numberFormatter: NumberFormatter = {
         let nf = NumberFormatter()
         nf.numberStyle = .decimal
@@ -71,7 +90,7 @@ class ConversionViewController: UIViewController, UITextFieldDelegate{
         
         let letters = NSCharacterSet.letters
         let specialChars = NSMutableCharacterSet()
-        specialChars.addCharacters(in: "!@#$%^&*(/><';:])[-}=\\{_.|,?~`\"+")
+        specialChars.addCharacters(in: "!@#--------$%^&*(/><';:])[-}=\\{_.|,?~`\"+")
 
         if(string.rangeOfCharacter(from: letters) != nil || string.rangeOfCharacter(from: specialChars as CharacterSet) != nil)
         {

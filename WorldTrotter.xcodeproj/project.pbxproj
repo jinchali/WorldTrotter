@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C51FBC191E4ABDF200CB0BC9 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FBC181E4ABDF200CB0BC9 /* File.swift */; };
 		C56F73A71E3D1F420004B57B /* ConversionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F73A61E3D1F420004B57B /* ConversionViewController.swift */; };
 		C5F4EC0E1E481A2000BCD7EF /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5F4EC0D1E481A2000BCD7EF /* MapKit.framework */; };
 		C5F4EC101E4822DA00BCD7EF /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F4EC0F1E4822DA00BCD7EF /* MapViewController.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C51FBC181E4ABDF200CB0BC9 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		C56F73A61E3D1F420004B57B /* ConversionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConversionViewController.swift; path = ../ConversionViewController.swift; sourceTree = "<group>"; };
 		C5F4EC0D1E481A2000BCD7EF /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		C5F4EC0F1E4822DA00BCD7EF /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				C56F73A61E3D1F420004B57B /* ConversionViewController.swift */,
+				C51FBC181E4ABDF200CB0BC9 /* File.swift */,
 				C5F584841E382F4000C0A2DF /* AppDelegate.swift */,
 				C5F584881E382F4000C0A2DF /* Main.storyboard */,
 				C5F5848B1E382F4000C0A2DF /* Assets.xcassets */,
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C56F73A71E3D1F420004B57B /* ConversionViewController.swift in Sources */,
+				C51FBC191E4ABDF200CB0BC9 /* File.swift in Sources */,
 				C5F4EC101E4822DA00BCD7EF /* MapViewController.swift in Sources */,
 				C5F584851E382F4000C0A2DF /* AppDelegate.swift in Sources */,
 			);
