@@ -9,9 +9,12 @@
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController{
+class MapViewController: UIViewController, MKMapViewDelegate{
     
     var mapView: MKMapView!
+    let locationManager = CLLocationManager()
+    let locateMe = UIButton()
+    var trackingUser = false
     
     override func loadView() {
         //Create a map view
@@ -19,6 +22,8 @@ class MapViewController: UIViewController{
         
         //Set it as *the* view of this view controller
         view = mapView
+        
+        locationManager.requestAlwaysAuthorization()
         
         let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
         segmentedControl.backgroundColor = UIColor.white.withAlphaComponent(0.5)
@@ -39,12 +44,39 @@ class MapViewController: UIViewController{
         leadingConstraint.isActive = true
         trailingConstraint.isActive = true
         
+        //Attempt to add button
+        locateMe.setTitleColor(UIColor.black, for: UIControlState.normal)
+        locateMe.setTitle("Locate Me!", for: UIControlState.normal)
+        locateMe.backgroundColor = UIColor.white
+        locateMe.addTarget(self, action: "locateUser", for: UIControlEvents.touchUpInside)
+        
+        locateMe.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(locateMe)
+        
+        let locateBottomConstraint = locateMe.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -60)
+
+        locateBottomConstraint.isActive = true
+        locateMe.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        
+        
+        //locationManager.desiredAccuracy = kCLLocationAccuracyBest
+ 
+        //locationManager.startUpdatingLocation()
+        
+        //mapView.delegate = self
+        
+        mapView.showsUserLocation = true
+        
+
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print("MapViewController loaded its view.")
+        
     }
     
     func mapTypeChanged(_ segControl: UISegmentedControl){
@@ -60,4 +92,29 @@ class MapViewController: UIViewController{
         }
     }
     
+    func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
+        print("Start Loading")
+    }
+    
+    func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
+        print("Stop Loading")
+    }
+    
+    func locateUser()
+    {
+        print("Hello")
+        if(!trackingUser)
+        {
+            var prevLocation = mapView.centerCoordinate
+            locateMe.backgroundColor = UIColor.blue
+            trackingUser = true
+        }
+        else{
+            locateMe.backgroundColor = UIColor.white
+            trackingUser = false
+            
+        }
+        
+    }
+ 
 }
