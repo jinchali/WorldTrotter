@@ -15,6 +15,7 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     let locationManager = CLLocationManager()
     let locateMe = UIButton()
     var trackingUser = false
+    var prevLocation = CLLocationCoordinate2D()
     
     override func loadView() {
         //Create a map view
@@ -105,13 +106,15 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         print("Hello")
         if(!trackingUser)
         {
-            var prevLocation = mapView.centerCoordinate
+            prevLocation = mapView.centerCoordinate
             locateMe.backgroundColor = UIColor.blue
             trackingUser = true
+            mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
         }
         else{
             locateMe.backgroundColor = UIColor.white
             trackingUser = false
+            mapView.setCenter(prevLocation, animated: false)
             
         }
         
