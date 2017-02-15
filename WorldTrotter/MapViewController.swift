@@ -13,7 +13,10 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     var mapView: MKMapView!
     let locationManager = CLLocationManager()
+    
     let locateMe = UIButton()
+    let pinButton = UIButton()
+    
     var trackingUser = false
     var prevLocation = CLLocationCoordinate2D()
     
@@ -45,7 +48,7 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         leadingConstraint.isActive = true
         trailingConstraint.isActive = true
         
-        //Attempt to add button
+        //Attempt to add location button
         locateMe.setTitleColor(UIColor.black, for: UIControlState.normal)
         locateMe.setTitle("Locate Me!", for: UIControlState.normal)
         locateMe.backgroundColor = UIColor.white
@@ -57,17 +60,30 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         let locateBottomConstraint = locateMe.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -60)
 
         locateBottomConstraint.isActive = true
-        locateMe.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        locateMe.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         
+        
+        //Attempt to add pin button
+        pinButton.setTitleColor(UIColor.black, for: UIControlState.normal)
+        pinButton.setTitle("Pins", for: UIControlState.normal)
+        pinButton.backgroundColor = UIColor.white
+        pinButton.addTarget(self, action: "pins", for: UIControlEvents.touchUpInside)
+        
+        pinButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pinButton)
+        
+        let pinBottomConstraint = pinButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -60)
+        
+        pinBottomConstraint.isActive = true
+        pinButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor).isActive = true
         
         
         //locationManager.desiredAccuracy = kCLLocationAccuracyBest
  
         //locationManager.startUpdatingLocation()
         
-        //mapView.delegate = self
+        mapView.delegate = self
         
-        mapView.showsUserLocation = true
         
 
         
@@ -95,29 +111,61 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
         print("Start Loading")
+        
+        prevLocation = mapView.centerCoordinate
+        mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
     }
+    
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+        
+    }
+    
     
     func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
         print("Stop Loading")
+        mapView.setCenter(prevLocation, animated: false)
     }
     
     func locateUser()
     {
         print("Hello")
-        if(!trackingUser)
+        if(!mapView.showsUserLocation)
         {
-            prevLocation = mapView.centerCoordinate
+            //prevLocation = mapView.centerCoordinate
+            mapView.showsUserLocation = true
             locateMe.backgroundColor = UIColor.blue
-            trackingUser = true
-            mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
+            //trackingUser = true
+            
         }
         else{
+            mapView.showsUserLocation = false
             locateMe.backgroundColor = UIColor.white
-            trackingUser = false
-            mapView.setCenter(prevLocation, animated: false)
             
         }
         
     }
- 
+    
+    func pins()
+    {
+        var pinIndex = 0
+        
+        if(pinIndex == 0){
+            
+        }
+        else if(pinIndex == 1){
+            
+        }
+        else if(pinIndex == 2){
+            
+        }
+        else if(pinIndex == 3){
+            
+        }
+        
+        pinIndex = (pinIndex+1)%4
+    }
+
+
+   
+
 }
