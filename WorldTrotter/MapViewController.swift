@@ -18,7 +18,23 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     let pinButton = UIButton()
     
     var trackingUser = false
+    
     var prevLocation = CLLocationCoordinate2D()
+    
+    var pinIndex = 0
+    
+    let placeOfBirth = MKPointAnnotation()
+    let birthLocation = CLLocationCoordinate2DMake(40.4976, -74.4885)
+    
+    let currentLocation = MKPointAnnotation()
+    let currentLocationCoord = CLLocationCoordinate2DMake(35.9732, -79.9950)
+    
+    let NYC = MKPointAnnotation()
+    let NYCCoord = CLLocationCoordinate2DMake(40.7128, -74.0059)
+    
+    var hasDefaultLocation = false
+    
+    var calledFromLocation = false
     
     override func loadView() {
         //Create a map view
@@ -111,19 +127,29 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
         print("Start Loading")
+        if(!hasDefaultLocation){
+                 prevLocation = mapView.centerCoordinate
+                hasDefaultLocation = true
+        }
+   
         
-        prevLocation = mapView.centerCoordinate
-        mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        
+        mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
+        locateMe.backgroundColor = UIColor.blue
     }
     
     
     func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
         print("Stop Loading")
-        mapView.setCenter(prevLocation, animated: false)
+        locateMe.backgroundColor = UIColor.white
+        //FIGURE OUT A WAY TO ONLY SET CENTER WHEN CALLE FROM LOCATEUSER
+        if(calledFromLocation)
+        {
+            mapView.setCenter(prevLocation, animated: false)
+            calledFromLocation = false
+        }
     }
     
     func locateUser()
@@ -131,15 +157,14 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         print("Hello")
         if(!mapView.showsUserLocation)
         {
-            //prevLocation = mapView.centerCoordinate
+            mapView.removeAnnotations(self.mapView.annotations)
             mapView.showsUserLocation = true
-            locateMe.backgroundColor = UIColor.blue
-            //trackingUser = true
             
         }
         else{
+            calledFromLocation = true
             mapView.showsUserLocation = false
-            locateMe.backgroundColor = UIColor.white
+
             
         }
         
@@ -147,24 +172,50 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     func pins()
     {
-        var pinIndex = 0
+        
+        placeOfBirth.coordinate = birthLocation
+        placeOfBirth.title = "Place of Birth"
+        
+        currentLocation.coordinate = currentLocationCoord
+        currentLocation.title = "Current Location"
+        
+        NYC.coordinate = NYCCoord
+        NYC.title = "New York City"
+        
+        if(!hasDefaultLocation)
+        {
+            prevLocation = mapView.centerCoordinate
+            hasDefaultLocation = true
+        }
+        
+        if(mapView.showsUserLocation)
+        {
+            mapView.showsUserLocation = false
+        }
         
         if(pinIndex == 0){
-            
+             mapView.removeAnnotations(self.mapView.annotations)
+            mapView.setCenter(birthLocation, animated: false)
         }
         else if(pinIndex == 1){
-            
+            mapView.removeAnnotations(self.mapView.annotations)
+            mapView.addAnnotation(currentLocation)
+            mapView.setCenter(currentLocationCoord, animated: false)
         }
         else if(pinIndex == 2){
-            
+             mapView.removeAnnotations(self.mapView.annotations)
+            mapView.addAnnotation(NYC)
+            mapView.setCenter(NYCCoord, animated: false)
         }
         else if(pinIndex == 3){
-            
+            mapView.setCenter(prevLocation, animated: false)
+            hasDefaultLocation = false
+            mapView.removeAnnotations(self.mapView.annotations)
         }
         
         pinIndex = (pinIndex+1)%4
+        print(pinIndex)
     }
-
 
    
 
