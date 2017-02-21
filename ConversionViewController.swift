@@ -26,8 +26,8 @@ class ConversionViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet var textField: UITextField!
     
     @IBAction func fahrenheitFieldEditingChanged(_ textField:  UITextField){
-        if let text = textField.text, let value = Double(text) {
-            fahrenheitValue = Measurement(value: value, unit: .fahrenheit)
+        if let text = textField.text, let number = numberFormatter.number(from: text) {
+            fahrenheitValue = Measurement(value: number.doubleValue, unit: .fahrenheit)
         } else {
             fahrenheitValue = nil
         }
@@ -85,19 +85,22 @@ class ConversionViewController: UIViewController, UITextFieldDelegate{
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) ->  Bool{
         
-        let existingTextHasDecimalSeperator = textField.text?.range(of: ".")
-        let replacementTextHasDecimalSeperator = string.range(of: ".")
+        let currentLocale = Locale.current
+        let decimalSeperator = currentLocale.decimalSeparator ?? "."
+        
+        let existingTextHasDecimalSeparator = textField.text?.range(of: decimalSeperator)
+        let replacementTextHasDecimalSeparator = string.range(of: decimalSeperator)
         
         let letters = NSCharacterSet.letters
         let specialChars = NSMutableCharacterSet()
-        specialChars.addCharacters(in: "!@#--------$%^&*(/><';:])[-}=\\{_.|,?~`\"+")
+        specialChars.addCharacters(in: "!@#--------$%^&*(/><';:])[-}=\\{_.|?~`\"+")
 
         if(string.rangeOfCharacter(from: letters) != nil || string.rangeOfCharacter(from: specialChars as CharacterSet) != nil)
         {
             return false
         } else
-            if existingTextHasDecimalSeperator != nil,
-                replacementTextHasDecimalSeperator != nil {
+            if existingTextHasDecimalSeparator != nil,
+                replacementTextHasDecimalSeparator != nil {
                 return false
             } else {
                 return true

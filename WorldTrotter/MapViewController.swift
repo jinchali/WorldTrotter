@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate{
-    
+    //Setting up views and other variables as members of class so they can be accessed from any function
     var mapView: MKMapView!
     let locationManager = CLLocationManager()
     
@@ -32,9 +32,13 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     let NYC = MKPointAnnotation()
     let NYCCoord = CLLocationCoordinate2DMake(40.7128, -74.0059)
     
+    //Global booleans to later be used to let me know if we need a default location or not
     var hasDefaultLocation = false
     
+    //Global boolean to let us know in our delegate functions that are called once showsUserLocaton = true
+    //which function mutated the variable.
     var calledFromLocation = false
+    
     
     override func loadView() {
         //Create a map view
@@ -45,7 +49,11 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         
         locationManager.requestAlwaysAuthorization()
         
-        let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
+        let standardString = NSLocalizedString("Standard", comment: "Standard map view")
+        let satelliteString = NSLocalizedString("Satellite", comment: "Satellite map view")
+        let hybridString = NSLocalizedString("Hybrid", comment: "Hybrid map view")
+        let segmentedControl = UISegmentedControl(items: [standardString, satelliteString, hybridString])
+        
         segmentedControl.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         segmentedControl.selectedSegmentIndex = 0
         
@@ -64,9 +72,11 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         leadingConstraint.isActive = true
         trailingConstraint.isActive = true
         
-        //Attempt to add location button
+        //Adding locateMe button to bottom left of screen and associate with "locateuser" function
+        let locateMeString = NSLocalizedString("Locate Me!", comment: "Locate me Button")
+        
         locateMe.setTitleColor(UIColor.black, for: UIControlState.normal)
-        locateMe.setTitle("Locate Me!", for: UIControlState.normal)
+        locateMe.setTitle(locateMeString, for: UIControlState.normal)
         locateMe.backgroundColor = UIColor.white
         locateMe.addTarget(self, action: "locateUser", for: UIControlEvents.touchUpInside)
         
@@ -79,9 +89,11 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         locateMe.leadingAnchor.constraint(equalTo: margins.leadingAnchor).isActive = true
         
         
-        //Attempt to add pin button
+        //Adding pin button to bottom right of screen and associating it to "pins" function
+        let pinsButtonString = NSLocalizedString("Pins", comment: "Pins Button")
+        
         pinButton.setTitleColor(UIColor.black, for: UIControlState.normal)
-        pinButton.setTitle("Pins", for: UIControlState.normal)
+        pinButton.setTitle(pinsButtonString, for: UIControlState.normal)
         pinButton.backgroundColor = UIColor.white
         pinButton.addTarget(self, action: "pins", for: UIControlEvents.touchUpInside)
         
@@ -126,7 +138,6 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     }
     
     func mapViewWillStartLocatingUser(_ mapView: MKMapView) {
-        print("Start Loading")
         if(!hasDefaultLocation){
                  prevLocation = mapView.centerCoordinate
                 hasDefaultLocation = true
@@ -136,32 +147,43 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     }
     
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        mapView.setCenter((locationManager.location?.coordinate)!, animated: false)
+        //Creating a view and a region so when we change the map position, we can also change zoom
+        let userView = MKCoordinateSpanMake(10, 10)
+        let userRegion = MKCoordinateRegionMake((locationManager.location?.coordinate)!, userView)
+
+        mapView.setRegion(userRegion, animated: false)
+
+        //Change the button's color so the user knows showsUserLocation has been turned ON
         locateMe.backgroundColor = UIColor.blue
     }
     
     
     func mapViewDidStopLocatingUser(_ mapView: MKMapView) {
-        print("Stop Loading")
+        //Change the button's color so the user knows showsUserLocation has been turned OFF
         locateMe.backgroundColor = UIColor.white
-        //FIGURE OUT A WAY TO ONLY SET CENTER WHEN CALLE FROM LOCATEUSER
+        
+        //This global variable let's us only run this code if it was called from locateUser
         if(calledFromLocation)
         {
-            mapView.setCenter(prevLocation, animated: false)
+            //Creates a view and region to change map's position along with view
+            let regularView = MKCoordinateSpanMake(75, 75)
+            let regularRegion = MKCoordinateRegionMake(prevLocation, regularView)
+            mapView.setRegion(regularRegion, animated: false)
             calledFromLocation = false
         }
     }
     
     func locateUser()
     {
-        print("Hello")
         if(!mapView.showsUserLocation)
         {
+            //Remove all possible pins and chnages showsUserLocation to hit the delegate functions
             mapView.removeAnnotations(self.mapView.annotations)
             mapView.showsUserLocation = true
             
         }
         else{
+            //Changes our global variable so we know here the delegate function from showsUserLocation = false is called from
             calledFromLocation = true
             mapView.showsUserLocation = false
 
@@ -172,6 +194,7 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     func pins()
     {
+        //Setup of all pin's coordinates and titles so our user can see information about them
         
         placeOfBirth.coordinate = birthLocation
         placeOfBirth.title = "Place of Birth"
@@ -182,39 +205,55 @@ class MapViewController: UIViewController, MKMapViewDelegate{
         NYC.coordinate = NYCCoord
         NYC.title = "New York City"
         
+        //Default zoom level to change to whenever we access a pin
+        let regularView = MKCoordinateSpanMake(75, 75)
+        
+        //If there is no default locaton, save one and use or global variable to let us know we have it now
         if(!hasDefaultLocation)
         {
             prevLocation = mapView.centerCoordinate
             hasDefaultLocation = true
         }
-        
+        //Stops locating the user whenever the pin button is hit
         if(mapView.showsUserLocation)
         {
             mapView.showsUserLocation = false
         }
         
+        //For pinIndex values 0-2, adds the pin to the mapView and changes the view to center on it.
+        //For pinIndex value 3, removes all pins, and returns you to default location.
+
+        
         if(pinIndex == 0){
              mapView.removeAnnotations(self.mapView.annotations)
-            mapView.setCenter(birthLocation, animated: false)
+            mapView.addAnnotation(placeOfBirth)
+
+            let regularRegion = MKCoordinateRegionMake(birthLocation, regularView)
+            mapView.setRegion(regularRegion, animated: false)
         }
         else if(pinIndex == 1){
             mapView.removeAnnotations(self.mapView.annotations)
             mapView.addAnnotation(currentLocation)
-            mapView.setCenter(currentLocationCoord, animated: false)
+
+            let regularRegion = MKCoordinateRegionMake(currentLocationCoord, regularView)
+            mapView.setRegion(regularRegion, animated: false)
         }
         else if(pinIndex == 2){
              mapView.removeAnnotations(self.mapView.annotations)
             mapView.addAnnotation(NYC)
-            mapView.setCenter(NYCCoord, animated: false)
+            
+            let regularRegion = MKCoordinateRegionMake(NYCCoord, regularView)
+            mapView.setRegion(regularRegion, animated: false)
         }
         else if(pinIndex == 3){
-            mapView.setCenter(prevLocation, animated: false)
+            let regularRegion = MKCoordinateRegionMake(prevLocation, regularView)
+            mapView.setRegion(regularRegion, animated: false)
+            
             hasDefaultLocation = false
             mapView.removeAnnotations(self.mapView.annotations)
         }
-        
+        //Increments zoom
         pinIndex = (pinIndex+1)%4
-        print(pinIndex)
     }
 
    
